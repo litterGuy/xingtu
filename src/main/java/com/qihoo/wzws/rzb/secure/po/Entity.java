@@ -1,23 +1,20 @@
-/*    */ package com.qihoo.wzws.rzb.secure.po;
-/*    */ 
-/*    */ import java.io.Serializable;
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ public class Entity
-/*    */   implements Serializable, Cloneable
-/*    */ {
-/*    */   private static final long serialVersionUID = 1L;
-/*    */   
-/*    */   public Object clone() throws CloneNotSupportedException {
-/* 15 */     return super.clone();
-/*    */   }
-/*    */ }
+
+package com.qihoo.wzws.rzb.secure.po;
 
 
-/* Location:              C:\Users\Administrator\Downloads\xingtu_full\jar\rzb-sa.jar!\com\qihoo\wzws\rzb\secure\po\Entity.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       1.1.3
- */
+import java.io.Serializable;
+
+
+public class Entity
+        implements Serializable, Cloneable {
+    private static final long serialVersionUID = 1L;
+
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+
+        return super.clone();
+
+    }
+
+}
