@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>360星图-日志分析报告</title>
+<meta charset="UTF-8" />
+<script type="text/javascript">
+function t(c){
+	for(var b=c.parentNode.parentNode.parentNode.parentNode.getElementsByTagName('tr'),a=0;a<b.length;a++)'hide'==b[a].className?(b[a].className='show',c.innerHTML='▼'):'show'==b[a].className&&(b[a].className='hide',c.innerHTML='◀')};function a(c){var b=c.parentNode.parentNode.nextSibling;while(b && b.nodeType != 1) b=b.nextSibling;'agent-hide'==b.className?(b.className='a-show',c.innerHTML='▼'):'a-show'==b.className&&(b.className='agent-hide',c.innerHTML='▶')};</script>
+<style type="text/css">
+html {
+	font-size: 100%;
+	font-family:"微软雅黑","Microsoft Yahei",tahoma,arial;
+	-ms-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	font-family:"微软雅黑","Microsoft Yahei",tahoma,arial;
+	font-size: 80%;
+	color: #999999;
+	margin: 0;
+	background-color: #333333;
+}
+
+a:focus {
+	outline: thin dotted
+}
+
+a:active, a:hover {
+	outline: 0
+}
+
+p {
+	margin: 0 0 1em 0
+}
+
+ul {
+	margin: 1em 0
+}
+
+ul {
+	padding: 0 0 0 40px
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+h1 {
+
+	color: #52c4ff;
+
+}
+
+h2 {
+	font-weight: 700;
+	color: #52c4ff;
+	font-size: 1.2em;
+	margin: .83em 0 .20em 0;
+}
+
+.agent-hide, .hide {
+	display: none
+}
+
+.r, .s {
+	cursor: pointer
+}
+
+.r {
+	float: right
+}
+
+thead th {
+	text-align: center
+}
+
+.max {
+	color: #ffea00;
+	font-weight: 700;
+}
+
+#layout {
+	padding-left: 200px;
+	left: 0;
+}
+
+.l-box {
+	padding: 0 1.3em 1.3em 1.3em
+}
+
+.graph {
+	height: 1.529411765em;
+	margin-bottom: .470588235em;
+	overflow: hidden;
+	background-color: #3d3d3d;
+	border-radius: .071428571em;
+	text-align: center;
+}
+
+.graph .bar {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	background-color: #ff7e0e;
+	box-sizing: border-box;
+	color: #fff;
+	float: left;
+	height: 100%;
+	width: 0;
+}
+
+.graph .light {
+	background-color: #BBB
+}
+
+#menu {
+	-webkit-overflow-scroll: touch;
+	-webkit-transition: left 0.75s, -webkit-transform 0.75s;
+	background: #2f2f2f;
+	border-right: 1px #ddd;
+	bottom: 0;
+	left: 200px;
+	margin-left: -200px;
+	outline: 1px solid #1e1f20;
+	overflow-y: auto;
+	position: fixed;
+	top: 0;
+	transition: left 0.75s, -webkit-transform 0.75s, transform 0.75s;
+	width: 200px;
+	z-index: 1000;
+}
+
+#menu a {
+	border: 0;
+	border-bottom: 1px solid #111;
+	box-shadow: 0 1px 0 #383838;
+	color: #ccc;
+	font-weight:normal;
+	padding: .6em 0 .6em .6em;
+	white-space: normal;
+	font-size:1.1em
+}
+
+#menu p {
+	color: #eee;
+	padding: .6em;
+	font-size: 85%;
+}
+
+#menu .pure-menu-open {
+	background: transparent;
+	border: 0;
+}
+
+#menu .pure-menu ul {
+	border: 0;
+	background: transparent;
+}
+
+#menu .pure-menu li a:hover, #menu .pure-menu li a:focus {
+	background: #333
+}
+
+#menu .pure-menu-heading:hover, #menu .pure-menu-heading:focus {
+	color: #333
+}
+
+#menu .pure-menu-heading {
+	color: black;
+	font-size: 120%;
+	font-weight: bold;
+}
+
+.pure-u {
+	display: inline-block;
+	*display: inline;
+	zoom: 1;
+	letter-spacing: normal;
+	word-spacing: normal;
+	vertical-align: top;
+	text-rendering: auto;
+}
+
+.pure-u-1 {
+	display: inline-block;
+	*display: inline;
+	zoom: 1;
+	letter-spacing: normal;
+	word-spacing: normal;
+	vertical-align: top;
+	text-rendering: auto;
+}
+
+.pure-u-1 {
+	width: 100%
+}
+
+.pure-g-r {
+	letter-spacing: -.31em;
+	*letter-spacing: normal;
+	*word-spacing: -.43em;
+	display: -webkit-flex;
+	-webkit-flex-flow: row wrap;
+	display: -ms-flexbox;
+	-ms-flex-flow: row wrap;
+}
+
+.pure-g-r {
+	word-spacing: -.43em
+}
+
+.pure-g-r [class*=pure-u] {
+	
+}
+
+@media ( max-width :480px) {
+	.pure-g-r>.pure-u, .pure-g-r>[class*=pure-u-] {
+		width: 100%
+	}
+}
+
+@media ( max-width :767px) {
+	.pure-g-r>.pure-u, .pure-g-r>[class*=pure-u-] {
+		width: 100%
+	}
+}
+
+.pure-menu ul {
+	position: absolute;
+	visibility: hidden;
+}
+
+.pure-menu.pure-menu-open {
+	visibility: visible;
+	z-index: 2;
+	width: 100%;
+}
+
+.pure-menu ul {
+	left: -10000px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	top: -10000px;
+	z-index: 1;
+}
+
+.pure-menu>ul {
+	position: relative
+}
+
+.pure-menu-open>ul {
+	left: 0;
+	top: 0;
+	visibility: visible;
+}
+
+.pure-menu-open>ul:focus {
+	outline: 0
+}
+
+.pure-menu li {
+	position: relative
+}
+
+.pure-menu a, .pure-menu .pure-menu-heading {
+	display: block;
+	color: inherit;
+	line-height: 1.5em;
+	padding: 5px 20px;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.pure-menu li a {
+	padding: 5px 20px
+}
+
+.pure-menu.pure-menu-open {
+	background: #fff;
+	border: 1px solid #b7b7b7;
+}
+
+.pure-menu a {
+	border: 1px solid transparent;
+	border-left: 0;
+	border-right: 0;
+}
+
+.pure-menu a {
+	color: #4B4B4B
+}
+
+.pure-menu li a:hover, .pure-menu li a:focus {
+	background: #eee
+}
+
+.pure-menu .pure-menu-heading {
+	color: #565d64;
+	font-size: 90%;
+	margin-top: .5em;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #dfdfdf;
+}
+
+.pure-table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	empty-cells: show;
+	border: 1px solid #999;
+	width:100%;k
+}
+
+.pure-table td, .pure-table th {
+	border-left: 1px solid #999;
+	border-width: 0 0 0 1px;
+	font-size: inherit;
+	margin: 0;
+	overflow: visible;
+	padding: 6px 12px;
+}
+
+.pure-table td:first-child, .pure-table th:first-child {
+	border-left-width: 0
+}
+
+.pure-table td:last-child {
+	white-space: normal;
+	width: auto;
+	word-break: break-all;
+	word-wrap: break-word;
+}
+
+.pure-table thead {
+	background: #3d3d3d;
+	color: #FFF;
+	text-align: left;
+	text-shadow: 0px -1px 0px #000;
+	vertical-align: bottom;
+}
+
+.pure-table td {
+	background-color: transparent
+}
+
+
+.pure-table tbody tr:hover, .pure-table-striped tr:nth-child(2n-1) td {
+	background-color: #3e7699;
+	color:#fff;
+}
+
+@media ( max-width : 974px) {
+	#layout {
+		position: relative;
+		padding-left: 0;
+	}
+	#layout.active {
+		position: relative;
+		left: 200px;
+	}
+	#layout.active #menu {
+		left: 200px;
+		width: 200px;
+	}
+	#menu {
+		left: 0
+	}
+	.pure-menu-link {
+		position: fixed;
+		left: 0;
+		display: block;
+	}
+	#layout.active .pure-menu-link {
+		left: 200px
+	}
+}
+</style>
+</head>
+<body>
+	<div class="pure-g-r" id="layout">
+	
+		<div id="menu" class="pure-u">
+			<div class="pure-menu pure-menu-open">
+			    <!-- 
+				<a class="pure-menu-heading" href="http://wangzhan.360.cn/xingtu/">360星图</a>
+				 -->
+				<div>
+				<img src="data:image/png;base64,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" style="height:60px;margin-left: 25px;">
+				</div>
+				
+				<ul>
+					<li><a href="#">数据概况</a></li>
+					<li><a href="#hosts">IP流量分析</a></li>
+					<li><a href="#requests">访问页面分析</a></li>
+					<li><a href="#static_requests">静态资源请求分析</a></li>
+					<li><a href="#not_found">死链分析</a></li>
+					<li><a href="#referrers">来源分析</a></li>
+					<li><a href="#so">搜索引擎爬虫分析</a></li>
+					<li><a href="#keyphrases">关键字分析</a></li>
+					<li><a href="#geo">地域分布</a></li>
+					<li><a href="#os">操作系统分析</a></li>
+					<li><a href="#browsers">浏览器分析</a></li>
+					<li><a href="#status_codes">状态码分析</a></li>
+					<li class="menu-item-divided"></li>
+				</ul>
+				
+			</div>
+		</div>
+		
+		<!-- menu -->
+
+		<div id="main" class="pure-u-1">
+			<div class="l-box">
+				<h1>360星图-常规日志分析报告</h1>
+				<p>日志分析时间:${datetime}</p>
+				<h2>数据概况</h2>
+				<p></p>
+				<table class="pure-table">
+					<tbody>
+						<tr>
+							<td style="font-weight: bold;">总访问量</td>
+							<td style="font-weight: bold;">PV数</td>
+							<td style="font-weight: bold;">UV数</td>
+							<td style="font-weight: bold;">独立IP数</td>
+							<td style="font-weight: bold;">异常访问数</td>
+							<td style="font-weight: bold;">消耗流量</td>
+							<td style="font-weight: bold;">日志文件大小</td>	
+						</tr>
+						<tr>
+							<td style="font-size:35px;color:#fff;text-align: center;">${Visits}</td>
+							<td style="font-size:35px;color:#fff;text-align: center;">${PV}</td>
+							#if(${CUV} > 0)
+							<td style="font-size:35px;color:#fff;text-align: center;">${UV}</td>
+							#else
+						    <td style="font-size:35px;color:#fff;text-align: center;" title="日志记录不全导致UV无法分析">-</td>
+						    #end
+							<td style="font-size:35px;color:#fff;text-align: center;">${UIP}</td>
+							<td style="font-size:35px;color:#fff;text-align: center;">${Errors}</td>
+							#if(${Band})
+							<td style="font-size:35px;color:#fff;text-align: center;">${Band}</td>
+							#else
+							<td style="font-size:35px;color:#fff;text-align: center;">-</td>
+							#end
+							<td style="font-size:35px;color:#fff;text-align: center;">${LogSize}</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				<h2 id="hosts">IP流量分析(TOP200)</h2>
+				<p>基于IP，分析IP对应地域、访问量、流量消耗</p>
+				<table class="pure-table">
+					<thead>
+						<tr>
+						    <th>ID</th>
+							<th>访问次数</th>
+							<th>访问占比%</th>
+							<th>IP</th>
+							<th>国家/地区</th>
+							<th>流量</th>
+							<th>流量占比%</th>
+							<th style="width: 50%;"><span class="r" onclick="t(this)">◀</span></th>
+						</tr>
+					</thead>
+					<tbody>
+						#foreach( $entity in $ipVisitsSortList )
+						    #if($velocityCount <= 10)
+						      <tr>
+						    #else
+						      <tr class="hide">
+						    #end
+						        <td>$velocityCount</td>
+								<td style="text-align: right;">$entity.visitStr</td>
+								#if($entity.visitflag > 0)
+								<td style="text-align: right;" class="max">$entity.visitRate</td>
+								#else
+								<td style="text-align: right;">$entity.visitRate</td>
+								#end
+								<td>$entity.ip</td>
+								#if($entity.country.indexOf("中国") > -1)
+								<td style="white-space: nowrap;">$entity.country</td>
+								#else
+								<td style="white-space: nowrap;" class="max">$entity.country</td>
+								#end
+								<td style="text-align: right;">$entity.bandStr</td>
+								#if($entity.bandflag > 0)
+								<td style="text-align: right;" class="max">$entity.bandRate</td>
+								#else
+								<td style="text-align: right;">$entity.bandRate</td>
+								#end
+								<td class="graph"><div class="bar" style="width: $entity.bandRate"></div></td>
+							  </tr>
+						#end
+					</tbody>
+				</table>
+				
+				
+				<h2 id="requests">页面访问分析(TOP200)</h2>
+				<p>页面访问次数、流量消耗</p>
+				<table class="pure-table">
+					<thead>
+						<tr>
+						    <th>ID</th>
+							<th>访问次数</th>
+							<th>访问占比%</th>
+							<th>流量</th>
+							<th>流量占比%</th>
+							<th style="width: 70%;">URL<span class="r" onclick="t(this)">◀</span></th>
+						</tr>
+					</thead>
+					<tbody>
+						#foreach( $entity in $pageVisitsSortList )
+						    #if($velocityCount <= 10)
+						      <tr>
+						    #else
+						      <tr class="hide">
+						    #end
+						        <td>$velocityCount</td>
+								<td style="text-align: right;">$entity.visitStr</td>
+								#if($entity.visitflag > 0)
+								<td style="text-align: right;" class="max">$entity.visitRate</td>
+								#else
+								<td style="text-align: right;">$entity.visitRate</td>
+								#end
+								<td style="text-align: right;">$entity.bandStr</td>
+								#if($entity.bandflag > 0)
+								<td style="text-align: right;" class="max">$entity.bandRate</td>
+								#else
+								<td style="text-align: right;">$entity.bandRate</td>
+								#end
+								<td>$entity.url</td>
+							  </tr>
+						#end
+					</tbody>
+				</table>
+				
+				<h2 id="static_requests">静态资源访问分析(TOP200)</h2>
+				<p>静态资源如图片、js、css访问分析</p>
+				<table class="pure-table">
+					<thead>
+						<tr>
+						    <th>ID</th>
+							<th>访问次数</th>
+							<th>访问占比%</th>
+							<th>流量</th>
+							<th>流量占比%</th>
+							<th style="width: 70%;">URL<span class="r" onclick="t(this)">◀</span></th>
+						</tr>
+					</thead>
+					<tbody>
+						#foreach( $entity in $staticPageVisitsSortList )
+						    #if($velocityCount <= 10)
+						      <tr>
+						    #else
+						      <tr class="hide">
+						    #end
+						        <td>$velocityCount</td>
+								<td style="text-align: right;">$entity.visitStr</td>
+								#if($entity.visitflag > 0)
+								<td style="text-align: right;" class="max">$entity.visitRate</td>
+								#else
+								<td style="text-align: right;">$entity.visitRate</td>
+								#end
+								<td style="text-align: right;">$entity.bandStr</td>
+								#if($entity.bandflag > 0)
+								<td style="text-align: right;" class="max">$entity.bandRate</td>
+								#else
+								<td style="text-align: right;">$entity.bandRate</td>
+								#end
+								<td>$entity.url</td>
+							  </tr>
+						#end
+					</tbody>
+				</table>
+				
+				
+				<h2 id="not_found">死链分析(TOP200)</h2>
+				<p>404访问排行</p>
+				<table class="pure-table">
+					<thead>
+						<tr>
+						    <th>ID</th>
+							<th>访问次数</th>
+							<th>访问占比%</th>
+							<th>流量</th>
+							<th>流量占比%</th>
+							<th style="width: 70%;">URL<span class="r" onclick="t(this)">◀</span></th>
+						</tr>
+					</thead>
+					<tbody>
+						#foreach( $entity in $_404PageVisitsSortList )
+						    #if($velocityCount <= 10)
+						      <tr>
+						    #else
+						      <tr class="hide">
+						    #end
+						        <td>$velocityCount</td>
+								<td style="text-align: right;">$entity.visitStr</td>
+								#if($entity.visitflag > 0)
+								<td style="text-align: right;" class="max">$entity.visitRate</td>
+								#else
+								<td style="text-align: right;">$entity.visitRate</td>
+								#end
+								<td style="text-align: right;">$entity.bandStr</td>
+								#if($entity.bandflag > 0)
+								<td style="text-align: right;" class="max">$entity.bandRate</td>
+								#else
+								<td style="text-align: right;">$entity.bandRate</td>
+								#end
+								<td>$entity.url</td>
+							  </tr>
+						#end
+					</tbody>
+				</table>
+				
+				<h2 id="referrers">来源分析(TOP200)</h2>
+				<p>来源访问排行</p>
+				<table class="pure-table">
+					<thead>
+						<tr>
+						    <th>ID</th>
+							<th>访问次数</th>
+							<th>访问占比%</th>
+							<th style="width: 70%;">URL<span class="r" onclick="t(this)">◀</span></th>
+						</tr>
+					</thead>
+					<tbody>
+						#foreach( $entity in $referersVisitsSortList )
+						    #if($velocityCount <= 10)
+						      <tr>
+						    #else
+						      <tr class="hide">
+						    #end
+						        <td>$velocityCount</td>
+								<td style="text-align: right;">$entity.countStr</td>
+								#if($entity.flag > 0)
+								<td style="text-align: right;" class="max">$entity.rate</td>
+								#else
+								<td style="text-align: right;">$entity.rate</td>
+								#end
+								<td>$entity.key</td>
+							  </tr>
+						#end
+					</tbody>
+				</table>
+				
+				<h2 id="so">搜索引擎爬虫分析</h2>
+				<p>搜索引擎爬虫访问次数、流量消耗排行</p>
+				<table class="pure-table">
+					<thead>
+						<tr>
+							<th>访问次数</th>
+							<th>访问占比%</th>
+							<th>搜索爬虫</th>
+							<th>流量</th>
+							<th>流量占比%</th>
+							<th style="width: 70%;"><span class="r" onclick="t(this)">◀</span></th>
+						</tr>
+					</thead>
+					<tbody>
+						#foreach( $entity in $soVisitsSortList )
+						    #if($velocityCount <= 10)
+						      <tr>
+						    #else
+						      <tr class="hide">
+						    #end
+								<td style="text-align: right;">$entity.visitStr</td>
+								#if($entity.visitflag > 0)
+								<td style="text-align: right;" class="max">$entity.visitRate</td>
+								#else
+								<td style="text-align: right;">$entity.visitRate</td>
+								#end
+								<td style="text-align: right;">$entity.url</td>
+								<td style="text-align: right;">$entity.bandStr</td>
+								#if($entity.bandflag > 0)
+								<td style="text-align: right;" class="max">$entity.bandRate</td>
+								#else
+								<td style="text-align: right;">$entity.bandRate</td>
+								#end
+								<td class="graph"><div class="bar" style="width: $entity.bandRate"></div></td>
+							  </tr>
+						#end
+					</tbody>
+				</table>
+				
+				
+				<h2 id="keyphrases">关键字分析TOP10</h2>
+				<p>搜索引擎关键字分析</p>
+				<table class="pure-table">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>次数</th>
+							<th>关键字</th>
+							<th>搜索来源</th>
+						</tr>
+					</thead>
+					<tbody>
+						#foreach( $entity in $keywordSortList )
+						      <tr>
+						        <td>$velocityCount</td>
+						        <td style="text-align: right;">$entity.countStr</td>
+								<td>$entity.kw</td>
+								<td>$entity.se</td>
+							  </tr>
+						    
+						#end
+					</tbody>
+				</table>
+				
+				
+				<h2 id="geo">地域分布</h2>
+				<p>基于独立用户分析</p>
+				<table class="pure-table">
+					<thead>
+						<tr> 
+							<th>访问用户数</th>
+							<th>访问用户占比%</th>
+							<th style="width: 70%;">国家/地区<span class="r" onclick="t(this)">◀</span></th>
+						</tr>
+					</thead>
+					<tbody>
+					    #foreach( $entity in $regionVisitsSortList )
+						    #if($velocityCount <= 10)
+						      <tr>
+						    #else
+						      <tr class="hide">
+						    #end
+								<td style="text-align: right;">$entity.countStr</td>
+								#if($entity.flag > 0)
+								<td style="text-align: right;" class="max">$entity.rate</td>
+								#else
+								<td style="text-align: right;">$entity.rate</td>
+								#end
+								
+								#if($entity.key.indexOf("中国") > -1)
+								<td style="white-space: nowrap;">$entity.key</td>
+								#else
+								<td style="white-space: nowrap;" class="max">$entity.key</td>
+								#end
+								
+							  </tr>
+						#end
+					</tbody>
+				</table>
+				
+				
+				<h2 id="os">操作系统</h2>
+				<p>基于独立用户分析</p>
+				<table class="pure-table">
+					<thead>
+						<tr>
+							<th>访问用户数</th>
+							<th>访问用户占比%</th>
+							<th>操作系统</th>
+							<th style="width: 70%;">操作系统占比%<span class="r" onclick="t(this)">◀</span></th>
+						</tr>
+					</thead>
+					<tbody>
+						#foreach( $entity in $pcOSVisitsSortList )
+						    #if($velocityCount <= 10)
+						      <tr>
+						    #else
+						      <tr class="hide">
+						    #end
+						        <td style="text-align: right;">$entity.countStr</td>
+						        #if($entity.flag > 0)
+								<td style="text-align: right;" class="max">$entity.rate</td>
+								#else
+								<td style="text-align: right;">$entity.rate</td>
+								#end
+								<td>$entity.key</td>
+								<td class="graph"><div class="bar" style="width: $entity.rate"></div></td>
+							  </tr>
+						    
+						#end
+					</tbody>
+				</table>
+				
+				<h2 id="browsers">浏览器</h2>
+				<p>基于独立用户分析</p>
+				<table class="pure-table">
+					<thead>
+						<tr>
+							<th>访问用户数</th>
+							<th>访问用户占比%</th>
+							<th>浏览器</th>
+							<th style="width: 70%;">浏览器占比%<span class="r" onclick="t(this)">◀</span></th>
+						</tr>
+					</thead>
+					<tbody>
+						#foreach( $entity in $pcBrowserVisitsSortList )
+						    #if($velocityCount <= 10)
+						      <tr>
+						    #else
+						      <tr class="hide">
+						    #end
+						        <td style="text-align: right;">$entity.countStr</td>
+						        #if($entity.flag > 0)
+								<td style="text-align: right;" class="max">$entity.rate</td>
+								#else
+								<td style="text-align: right;">$entity.rate</td>
+								#end
+								<td>$entity.key</td>
+								<td class="graph"><div class="bar" style="width: $entity.rate"></div></td>
+							  </tr>
+						#end
+					</tbody>
+				</table>
+				
+				<h2 id="status_codes">状态码分析</h2>
+				<p>HTTP状态码分析</p>
+				<table class="pure-table">
+					<thead>
+						<tr>
+							<th>次数</th>
+							<th>占比%</th>
+							<th>状态码</th>
+						</tr>
+					</thead>
+					<tbody>
+						#foreach( $entity in $httpStatusSortList )
+						      <tr>
+								<td style="text-align: right;">$entity.countStr</td>
+								<td style="text-align: right;">$entity.rate</td>
+								<td>$entity.key</td>
+							  </tr>
+						#end
+					</tbody>
+				</table>
+			</div>
+			<!-- l-box -->
+		</div>
+		<!-- main -->
+	</div>
+	<!-- layout -->
+</body>
+</html>
