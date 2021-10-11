@@ -26,7 +26,17 @@ import java.util.*;
 
 public class ReportOutput {
 
-    public static void outputAttackHtml() {
+    private static String outputBasePath;
+
+    public static String getOutputBasePath() {
+        return outputBasePath;
+    }
+
+    public static void setOutputBasePath(String outputBasePath) {
+        ReportOutput.outputBasePath = outputBasePath;
+    }
+
+    public static void outputAttackHtml(String projectPath) {
 
         try {
 
@@ -245,6 +255,10 @@ public class ReportOutput {
 
             pw.close();
 
+            // copy需要的js文件夹
+            File srcFile = new File(projectPath + File.separator + "bin" + File.separator + "js");
+            File destFile = new File(getReportDir() + File.separator);
+            FileUtils.copyDirectoryToDirectory(srcFile, destFile);
         } catch (ResourceNotFoundException e) {
 
             e.printStackTrace();
@@ -944,7 +958,7 @@ public class ReportOutput {
 
     public static String getReportDir() {
 
-        return AnalyzeSingle.basePath + File.separator + "result" + File.separator;
+        return getOutputBasePath();
 
     }
 

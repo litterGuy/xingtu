@@ -1,0 +1,12 @@
+server:
+  port: 8080
+
+logging:
+  file:
+    name: logs/xingtu.log
+  level:
+    root: info
+
+output:
+  report:
+    path: G:\xingtu\output\

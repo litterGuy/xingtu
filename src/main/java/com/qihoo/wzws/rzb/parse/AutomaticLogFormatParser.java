@@ -270,7 +270,13 @@ public class AutomaticLogFormatParser {
                 }
 
                 break;
-
+            case 9:
+                try {
+                    fmtLog = CompanyLogFormatParser.parse(line, globalHost);
+                } catch (LogParserException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
 
 

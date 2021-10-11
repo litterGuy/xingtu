@@ -2,15 +2,20 @@
 package com.qihoo.wzws.rzb.util;
 
 
+import com.daima.common.exception.ErrorCode;
+import com.daima.common.exception.NSException;
 import com.qihoo.wzws.rzb.exception.SystemConfigException;
 import com.qihoo.wzws.rzb.parse.AutomaticLogFormatParser;
+import com.qihoo.wzws.rzb.parse.CompanyLogFormatParser;
 import com.qihoo.wzws.rzb.parse.CustomLogFormatParser;
 import com.qihoo.wzws.rzb.secure.ReportOutput;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
 import java.util.List;
 
-
+@Slf4j
 public class ValidateConfig {
     private static int xingtu_logtype = 0;
     private static int xingtu_pagetype = 0;
@@ -29,12 +34,16 @@ public class ValidateConfig {
     private static double ip_rate = 0.5D;
 
 
-    public static boolean validateSysConf(String[] args) {
+    public static boolean validateSysConf(String[] args) throws NSException {
 
         if (!ConfigUtil.initSysConf(args[0])) {
 
             return false;
 
+        }
+
+        if (StringUtils.isEmpty(args[2])) {
+            return false;
         }
 
 
@@ -51,11 +60,11 @@ public class ValidateConfig {
 
         String host = ConfigUtil.formatConfig.get("host");
 
-        String logfile = ConfigUtil.formatConfig.get("log_file");
+        String logfile = args[2];
 
         if (logfile == null || logfile.trim().length() == 0) {
 
-            System.out.println("请在配置文件config.ini中设置日志存放路径[log_file配置项]");
+            log.error("传递分析日志地址为空");
 
             return false;
 
@@ -66,7 +75,7 @@ public class ValidateConfig {
 
         if (!logF.exists()) {
 
-            System.out.println("请确认配置文件config.ini中设置的日志存放路径[log_file配置项]是否有效");
+            log.error("请确认传递分析日志地址是否有效");
 
             return false;
 
@@ -81,6 +90,13 @@ public class ValidateConfig {
 
                 CustomLogFormatParser.loadCustomLogFormatConfig();
 
+            } else if (xingtu_logtype == 3) {
+                // 处理公司内部nginx日志格式
+                boolean parseTrue = CompanyLogFormatParser.matcherLogFormatType(logfile);
+                if (!parseTrue) {
+                    log.error("暂不支持该类日志,请反馈到钉钉群。谢谢！");
+                    throw new NSException(new ErrorCode(1000, "暂不支持该类日志,请反馈到钉钉群。谢谢！"));
+                }
             } else {
 
 
@@ -103,7 +119,7 @@ public class ValidateConfig {
 
                     List<String> sample = AutomaticLogFormatParser.LOG_SAMPLE;
 
-                    System.out.println("暂不支持该类日志,请反馈到星图官方群。谢谢！");
+                    log.error("暂不支持该类日志,请反馈到星图官方群。谢谢！");
 
 
                     return false;
@@ -114,7 +130,7 @@ public class ValidateConfig {
 
         } catch (SystemConfigException ex) {
 
-            System.out.println(ex.getMessage());
+            log.error(ex.getMessage());
 
             return false;
 
@@ -125,7 +141,7 @@ public class ValidateConfig {
 
         if (scheduleAnalysis == null || scheduleAnalysis.trim().length() == 0) {
 
-            System.out.println("请在配置文件config.ini中设置[schedule_analysis配置项]");
+            log.error("请在配置文件config.ini中设置[schedule_analysis配置项]");
 
             return false;
 
@@ -133,7 +149,7 @@ public class ValidateConfig {
 
         if (!"1".equals(scheduleAnalysis) && !"2".equals(scheduleAnalysis)) {
 
-            System.out.println("请在配置文件config.ini中设置[schedule_analysis配置项]");
+            log.error("请在配置文件config.ini中设置[schedule_analysis配置项]");
 
             return false;
 
@@ -145,7 +161,7 @@ public class ValidateConfig {
         if (xingtu_email != null && xingtu_email.length() > 1 &&
                 !Utils.checkEmail(xingtu_email)) {
 
-            System.out.println("请配置文件config.ini中正确设置[" + xingtu_email + "配置项]");
+            log.error("请配置文件config.ini中正确设置[" + xingtu_email + "配置项]");
 
             return false;
 
@@ -156,7 +172,7 @@ public class ValidateConfig {
 
         if (!"1".equals(common_analysis) && !"2".equals(common_analysis)) {
 
-            System.out.println("请在配置文件config.ini中设置[common_analysis配置项]");
+            log.error("请在配置文件config.ini中设置[common_analysis配置项]");
 
             return false;
 
@@ -167,7 +183,7 @@ public class ValidateConfig {
 
         if (!"1".equals(ccAnalysis) && !"2".equals(ccAnalysis)) {
 
-            System.out.println("请在配置文件config.ini中设置[cc_analysis配置项]");
+            log.error("请在配置文件config.ini中设置[cc_analysis配置项]");
 
             return false;
 
@@ -185,7 +201,7 @@ public class ValidateConfig {
 
             } catch (Exception ex) {
 
-                System.out.println("请在配置文件config.ini中正确设置cc攻击自定义配置");
+                log.error("请在配置文件config.ini中正确设置cc攻击自定义配置");
 
                 return false;
 
@@ -194,9 +210,9 @@ public class ValidateConfig {
         }
 
 
-        System.out.println("设置的host为:" + host);
+        log.info("设置的host为:" + host);
 
-        System.out.println("日志路径为:" + logfile);
+        log.info("日志路径为:" + logfile);
 
 
         return true;
@@ -204,10 +220,8 @@ public class ValidateConfig {
     }
 
 
-    public static void validateRuleConf(String rulePath) throws SystemConfigException {
-
+    public static void validateRuleConf(String rulePath) throws NSException {
         ConfigUtil.initRuleConf(rulePath);
-
     }
 
 
